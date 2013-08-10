@@ -1,4 +1,4 @@
-
+### '<<' VS '+='
 ```ruby
 Benchmark.bm do |b|
   # <<
@@ -14,6 +14,7 @@ Benchmark.bm do |b|
 end
 ```
 
+##### Results
 ```
 # Ubuntu 13.04 64-bit
 # Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
@@ -32,9 +33,32 @@ end
    0.470000   0.000000   0.470000 (  0.476070)
 ```
 
+### '<<' VS interpolation
 ```ruby
 Benchmark.bm do |b|
-  b.report {}
-  b.report
+  # <<
+  b.report { 100_000.times { "string" << "string" } }
+  b.report { 1_000_000.times { "string" << "string" } }
+
+  # interpolation
+  b.report { 100_000.times { "string #{"string"}" } }
+  b.report { 1_000_000.times { "string #{"string"}" } }
 end
 ```
+
+##### Results
+
+```
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 2.0.0-p247
+
+       user     system      total        real
+   0.050000   0.000000   0.050000 (  0.046931)
+   0.360000   0.000000   0.360000 (  0.365020)
+
+   0.010000   0.000000   0.010000 (  0.017804)
+   0.170000   0.000000   0.170000 (  0.165179)
+```
+
