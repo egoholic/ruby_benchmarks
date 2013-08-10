@@ -10,6 +10,11 @@ end
 
 ##### Results
 ```
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 2.0.0-p247
+
        user     system      total        real
    0.840000   0.000000   0.840000 (  0.850846)
    0.240000   0.000000   0.240000 (  0.234213)
