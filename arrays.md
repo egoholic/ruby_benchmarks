@@ -1,3 +1,23 @@
+# classic syntax vs %w vs %i
+```ruby
+Benchmark.bm do |b|
+  b.report { 1_000_000.times { ['a', 'b', 'c', 'd', 'e'] } }
+  b.report { 1_000_000.times { [:a, :b, :c, :d, :e] } }
+  b.report { 1_000_000.times { %w{a b c d e} } }
+  b.report { 1_000_000.times { %i{a b c d e} } }
+end
+```
+
+##### Results
+```
+       user     system      total        real
+   0.840000   0.000000   0.840000 (  0.850846)
+   0.240000   0.000000   0.240000 (  0.234213)
+
+   0.870000   0.000000   0.870000 (  0.870216)
+   0.230000   0.000000   0.230000 (  0.233701)
+```
+
 ### '#concat' VS '+='
 ```ruby
 Benchmark.bm do |b|
