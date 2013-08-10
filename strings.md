@@ -1,3 +1,31 @@
+# #to_s VS #to_sym
+
+```ruby
+Benchmark.bm do |b|
+# #to_s
+b.report { s = :symbol;  100_000_000.times { s.to_s } }
+b.report { s = 'string'; 100_000_000.times { s.to_s } }
+# #to_sym
+b.report { s = :symbol;  100_000_000.times { s.to_sym } }
+b.report { s = 'string'; 100_000_000.times { s.to_sym } }
+end
+```
+
+##### Results
+```
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 2.0.0-p247
+
+       user     system      total        real
+  18.970000   0.000000  18.970000 ( 19.010987)
+   7.190000   0.000000   7.190000 (  7.201850)
+
+   6.620000   0.000000   6.620000 (  6.633185)
+  15.330000   0.000000  15.330000 ( 15.353015)
+```
+
 ### '<<' VS '#concat' VS '+='
 ```ruby
 Benchmark.bm do |b|
@@ -99,6 +127,7 @@ end
 # Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
 # RAM 7,7 GiB
 # Ruby 2.0.0-p247
+
        user     system      total        real
    0.050000   0.000000   0.050000 (  0.050247)
    0.440000   0.000000   0.440000 (  0.447004)
