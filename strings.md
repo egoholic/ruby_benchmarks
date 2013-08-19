@@ -27,6 +27,15 @@ end
 ```
 
 ### '<<' VS '#concat' VS '+='
+
+"#<<" и "#concat" - один и тот же метод
+
+```c
+    /* string.c */
+    rb_define_method(rb_cString, "concat", rb_str_concat, 1);
+    rb_define_method(rb_cString, "<<", rb_str_concat, 1);
+```
+
 ```ruby
 Benchmark.bm do |b|
   # <<
