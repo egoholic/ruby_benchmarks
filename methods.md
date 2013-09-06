@@ -244,3 +244,42 @@ def is 47.6% faster than define_method
 def is 38.2 % faster than define_method
 ```
 
+### #send vs Proc#call
+```ruby
+Benchmark.bm do |x|
+  obj = 'string'
+  lmbd = ->(obj) { obj.to_s }
+  proc = Proc.new { |obj| obj.to_s }
+
+  x.report { 1_000_000.times { obj.send(:to_s) } }
+  x.report { 1_000_000.times { lmbd.call(obj) } }
+  x.report { 1_000_000.times { proc.call(obj) } }
+end
+```
+##### Results
+```
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 1.9.3-p448
+
+       user     system      total        real
+   0.110000   0.000000   0.110000 (  0.108591)
+   0.170000   0.000000   0.170000 (  0.171853)
+   0.170000   0.000000   0.170000 (  0.177797)
+
+#send is 35.7% faster, lambda and proc are equal
+
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 2.0.0-p247
+
+       user     system      total        real
+   0.110000   0.000000   0.110000 (  0.109724)
+   0.170000   0.000000   0.170000 (  0.169154)
+   0.170000   0.000000   0.170000 (  0.173261)
+
+#send is 35.7% faster, proc and lambda are equal
+```
+
