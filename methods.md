@@ -283,3 +283,60 @@ end
 #send is 35.7% faster, proc and lambda are equal
 ```
 
+### method_missing with and without method definition
+```ruby
+class A
+  def method_missing(method_name, *args, &block)
+    if method_name.match /\Amethod_([\d])+\Z/
+      $1
+    else
+      super method_name, *args, &block
+    end
+  end
+end
+
+class B
+  def method_missing(method_name, *args, &block)
+    if method_name.match /\Amethod_([\d])+\Z/
+      B.class_eval <<-METHOD
+        def #{method_name}
+          $1
+        end
+      METHOD
+    else
+      super method_name, *args, &block
+    end
+  end
+end
+
+Benchmark.bm do |x|
+  x.report {1_000_000.times { A.new.method_100500 }}
+  x.report {1_000_000.times { B.new.method_100500 }}
+end
+```
+##### Results
+```
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 1.9.3-p448
+
+       user     system      total        real
+   1.930000   0.010000   1.940000 (  1.941696)
+   0.360000   0.000000   0.360000 (  0.364693)
+
+#method_missing with method definition is 81.2% faster.
+
+# Ubuntu 13.04 64-bit
+# Intel® Core™ i5-2450M CPU @ 2.50GHz × 4
+# RAM 7,7 GiB
+# Ruby 2.0.0-p247
+
+       user     system      total        real
+   2.090000   0.000000   2.090000 (  2.104916)
+   0.330000   0.000000   0.330000 (  0.331562)
+
+#method_missing with method definition is 84.3% faster.
+It's faster because #method_missing have been called only once.
+```
+
